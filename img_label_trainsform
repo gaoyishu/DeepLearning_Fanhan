@@ -1,0 +1,30 @@
+"""
+    This file is the preprocess of fanhan 127point landmarks which can transfer the json file to label file
+    cnn model can use.
+    Please put the input file in the same directory of this file.
+    Also, you can change it a little to let the script easily used.
+"""
+
+
+
+import json
+import os
+
+input_file = '127point_10_16.result'
+out_file = '127point_10_16_model.txt'
+
+with open(out_file, 'w') as train_file:
+    with open(input_file, 'r') as label_file:
+        for line in label_file.readlines():
+            filename = line.split('\t')[0]
+            json_ori = line.split('\t')[1]
+            json_str = json.loads(json_ori)
+            # split the landmarks out
+            landmarks = json_str['data'][0]['pointset']
+            str_sum = ""
+            for dictson in landmarks:
+                str_tmp = str(dictson['x']) + ',' + str(dictson['y']) + ','
+                str_sum += str_tmp
+            print(str_sum)
+            train_file.write( filename + ',' + str_sum[:-1] +'\n')
+
